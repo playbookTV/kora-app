@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "rube": {
+            "url": "https://rube.app/mcp",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1c2VyXzAxS0JUVEpIREVXWVI0WkdSWkVZRVBZQURTIiwib3JnSWQiOiJvcmdfMDFLQlRUSzRKUldFM1JNVEE5VEc2NDM2UzEiLCJpYXQiOjE3NjUwNTgxNTB9.CbJ50yPcyZsyRzqz778MlPVtJq5BpusgPkPyAJOXtXY"
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "kora-app",
-    "slug": "kora-app",
+    "slug": "kora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a37e8c25-4c3f-4938-a257-e8028cd91241"
+      }
+    },
+    "owner": "alphaknight"
   }
 }

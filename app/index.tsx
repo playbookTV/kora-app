@@ -1,130 +1,95 @@
-import { StyleSheet, View, Text, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Stack, Link } from 'expo-router';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, Colors } from 'react-native-ui-lib';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useTransactionStore } from '../store/transaction-store';
+import TransactionList from '../components/TransactionList';
 
 export default function HomeScreen() {
-  const safeSpend = 5400;
-  const currency = '₦';
-  const daysToPayday = 8;
+  const router = useRouter();
+  const { safeSpendToday, daysToPayday } = useTransactionStore();
+
+  // Temporary: Initialize safe spend if 0 (mock calculation for now, just to show something)
+  // In real app, this would happen in Onboarding or backend sync
+  const { updateSafeSpend } = useTransactionStore();
+  useEffect(() => {
+     if (safeSpendToday === 0) {
+         // Default seed
+         // updateSafeSpend(5400, 8); // Let's not overwrite if 0, maybe user has 0.
+         // Actually, if it's 0 it might look like a bug to the user right now.
+         // Let's leave it as is, or maybe show "Calculating..." if onboarding just finished.
+     }
+  }, []);
+
+  const handleMicPress = () => {
+      router.push('/voice-session');
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Hide the default header */}
-      <Stack.Screen options={{ headerShown: false }} />
-
-      <View style={styles.topSpacer} />
-
-      <View style={styles.centerContent}>
-        <Text style={styles.label}>SAFE SPEND TODAY</Text>
-        <Text style={styles.amount}>{currency}{safeSpend.toLocaleString()}</Text>
-        <Text style={styles.subtext}>{daysToPayday} days to payday</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.screenBG }}>
+      <StatusBar style="dark" />
+      
+      {/* Main Container */}
+      <View flex padding-page>
         
-        {/* Temporary Dev Link */}
-        <Link href="/onboarding" asChild>
-          <Pressable style={styles.devLink}>
-            <Text style={styles.devLinkText}>Start Onboarding</Text>
-          </Pressable>
-        </Link>
-      </View>
+        {/* Top Spacer */}
+        <View height={40} />
 
-      <View style={styles.bottomControls}>
-        <View style={styles.micContainer}>
-          <Pressable 
-            style={({ pressed }) => [
-              styles.micButton,
-              pressed && styles.micButtonPressed
-            ]}
-          >
-            <Ionicons name="mic" size={40} color="white" />
-          </Pressable>
+        {/* Center Content: Safe Spend */}
+        <View center marginB-s8>
+          <Text small textMuted marginB-s2 style={{ letterSpacing: 1.5 }}>
+            SAFE SPEND TODAY
+          </Text>
+          <Text h1 textDefault>
+            ₦{safeSpendToday.toLocaleString()}
+          </Text>
+          <Text body textMuted marginT-s3>
+            {daysToPayday} days to payday
+          </Text>
         </View>
 
-        <Pressable style={styles.keyboardButton}>
-          <Ionicons name="keypad" size={24} color="#666" />
-        </Pressable>
+        {/* Transaction History (Scrollable Area) */}
+        <View flex>
+            <TransactionList />
+        </View>
+
+        {/* Interaction Area */}
+        <View height={100} row bottom spread>
+          {/* Add Manual Transaction Button (Left) */}
+          <TouchableOpacity 
+            padding-s4
+            style={{ alignSelf: 'flex-end', marginBottom: 20 }}
+            onPress={() => router.push('/add-transaction')}
+          >
+             <Feather name="plus" size={24} color={Colors.textDefault} />
+          </TouchableOpacity>
+
+          {/* Mic Button (Center) */}
+          <View centerH style={{ position: 'absolute', left: 0, right: 0, bottom: 20 }} pointerEvents="box-none">
+            <TouchableOpacity
+              bg-primary
+              center
+              style={{ width: 80, height: 80, borderRadius: 40 }}
+              activeOpacity={0.8}
+              onPress={handleMicPress}
+            >
+              <Feather name="mic" size={32} color={Colors.textInverse} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Settings Button (Right) */}
+           <TouchableOpacity 
+            padding-s4
+            style={{ alignSelf: 'flex-end', marginBottom: 20 }} 
+            onPress={() => router.push('/settings')}
+          >
+             <Feather name="settings" size={24} color={Colors.textDefault} />
+          </TouchableOpacity>
+        </View>
+
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 60,
-  },
-  topSpacer: {
-    height: 40,
-  },
-  centerContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  label: {
-    fontSize: 14,
-    color: '#888',
-    letterSpacing: 2,
-    marginBottom: 12,
-    fontWeight: '600',
-  },
-  amount: {
-    fontSize: 56,
-    fontWeight: '700',
-    color: '#000',
-    letterSpacing: -1,
-  },
-  subtext: {
-    fontSize: 18,
-    color: '#666',
-    marginTop: 8,
-    fontWeight: '400',
-  },
-  bottomControls: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    height: 100,
-  },
-  micContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  micButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  micButtonPressed: {
-    backgroundColor: '#333',
-    transform: [{ scale: 0.95 }],
-  },
-  keyboardButton: {
-    position: 'absolute',
-    right: 40,
-    bottom: 25,
-    padding: 10,
-  },
-  devLink: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-  },
-  devLinkText: {
-    color: '#007AFF',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-});

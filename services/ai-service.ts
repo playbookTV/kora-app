@@ -6,9 +6,9 @@ import { getOnboardingPrompt } from './kora-onboarding-prompt';
 import { getConversationPrompt, INTENT_CLASSIFIER_PROMPT } from './kora-conversation-prompt';
 
 // Configuration (Should be in .env in production)
-const OPENAI_API_KEY = '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';
-const MISTRAL_API_KEY = 'Tkgby2PzBUcSEeINm3Usy1zEbR5KBzq9';
-const ELEVENLABS_API_KEY = 'sk_236ae08fe56e2b3d3d4b2ae321af682bef5e7f528b172fc6';
+const OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY || '';
+const MISTRAL_API_KEY = process.env.EXPO_PUBLIC_MISTRAL_API_KEY || '';
+const ELEVENLABS_API_KEY = process.env.EXPO_PUBLIC_ELEVENLABS_API_KEY || '';
 const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // Default Rachel voice
 
 export interface AIResponse {

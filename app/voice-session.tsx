@@ -49,8 +49,8 @@ export default function VoiceSession() {
     if (!recording.current) return;
     setIsRecording(false);
     setIsProcessing(true);
-    await recording.current.stopAndUnloadAsync();
     const uri = recording.current.getURI();
+    await recording.current.stopAndUnloadAsync();
     if (uri) processUserAudio(uri);
     else setIsProcessing(false);
   };
@@ -140,8 +140,8 @@ export default function VoiceSession() {
             iconSource={isRecording ? MicOffIcon : MicOnIcon}
             size={Button.sizes.large}
             style={{ width: 80, height: 80, borderRadius: BorderRadius.round }}
-            onPressIn={handleStartRecording}
-            onPressOut={handleStopRecording}
+            onPressIn={() => { handleStartRecording(); }}
+            onPressOut={() => { handleStopRecording(); }}
           />
         )}
 
